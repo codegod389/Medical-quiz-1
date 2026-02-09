@@ -1,0 +1,1694 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anatomy Mastery: The Heart Quiz</title>
+    <style>
+        :root {
+            --primary: #2c5282;
+            --secondary: #3182ce;
+            --accent: #63b3ed;
+            --light: #ebf8ff;
+            --dark: #1a365d;
+            --success: #38a169;
+            --warning: #d69e2e;
+            --danger: #e53e3e;
+            --cardiac-red: #e53e3e;
+            --conduction-blue: #4299e1;
+            --vascular-purple: #9f7aea;
+            --myocardial-green: #48bb78;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(rgba(44, 82, 130, 0.9), rgba(49, 130, 206, 0.9)), 
+                        url('https://images.unsplash.com/photo-1559757148-5c350d0d3c56?ixlib=rb-1.2.1&auto=format&fit=crop&w=1600&q=80') center/cover fixed;
+            color: #2d3748;
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: linear-gradient(135deg, var(--primary), var(--cardiac-red));
+            color: white;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .heart-icon {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            font-size: 3rem;
+            opacity: 0.2;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+        }
+        
+        .subtitle {
+            font-size: 1.2rem;
+            opacity: 0.95;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .difficulty-badge {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--cardiac-red), var(--conduction-blue));
+            color: white;
+            padding: 8px 20px;
+            border-radius: 20px;
+            font-size: 1rem;
+            margin-top: 15px;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .quiz-info {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(255, 255, 255, 0.95);
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .info-item {
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .info-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+        
+        .info-label {
+            font-size: 0.9rem;
+            color: #4a5568;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        
+        .quiz-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
+        
+        .questions-section {
+            flex: 2;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 35px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-section {
+            flex: 1;
+            min-width: 300px;
+            background: rgba(255, 255, 255, 0.97);
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            display: none;
+            max-height: 85vh;
+            overflow-y: auto;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-section.visible {
+            display: block;
+        }
+        
+        .question {
+            margin-bottom: 35px;
+            padding-bottom: 30px;
+            border-bottom: 2px solid #e2e8f0;
+            position: relative;
+        }
+        
+        .question-number {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-left: 5px;
+        }
+        
+        .question-number::before {
+            content: "Q";
+            background: linear-gradient(135deg, var(--primary), var(--cardiac-red));
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            font-weight: bold;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+        
+        .question-text {
+            margin-bottom: 25px;
+            font-size: 1.15rem;
+            line-height: 1.8;
+            background: linear-gradient(to right, var(--light), #f7fafc);
+            padding: 20px;
+            border-radius: 10px;
+            border-left: 5px solid var(--accent);
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.05);
+        }
+        
+        .chambers-note {
+            background: linear-gradient(to right, #ebf8ff, #bee3f8);
+            border-left: 5px solid var(--conduction-blue);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .layers-note {
+            background: linear-gradient(to right, #fff5f5, #fed7d7);
+            border-left: 5px solid var(--cardiac-red);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .conduction-note {
+            background: linear-gradient(to right, #f0fff4, #c6f6d5);
+            border-left: 5px solid var(--myocardial-green);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .vessels-note {
+            background: linear-gradient(to right, #faf5ff, #e9d8fd);
+            border-left: 5px solid var(--vascular-purple);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .valves-note {
+            background: linear-gradient(to right, #fffaf0, #feebc8);
+            border-left: 5px solid var(--warning);
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 8px;
+            font-style: italic;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+        
+        .options {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        
+        .option {
+            padding: 18px 25px;
+            border: 2px solid #cbd5e0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.08rem;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .option::before {
+            content: attr(data-letter);
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 40px;
+            background: #edf2f7;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: var(--dark);
+            border-right: 2px solid #cbd5e0;
+        }
+        
+        .option-content {
+            margin-left: 45px;
+        }
+        
+        .option:hover {
+            background-color: #f7fafc;
+            border-color: var(--secondary);
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .option.selected {
+            background-color: #e6fffa;
+            border-color: var(--secondary);
+            box-shadow: 0 4px 12px rgba(49, 130, 206, 0.15);
+        }
+        
+        .option.correct {
+            background-color: #f0fff4;
+            border-color: var(--success);
+            box-shadow: 0 4px 12px rgba(56, 161, 105, 0.15);
+        }
+        
+        .option.incorrect {
+            background-color: #fff5f5;
+            border-color: var(--danger);
+            box-shadow: 0 4px 12px rgba(229, 62, 62, 0.15);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+        
+        button {
+            padding: 18px 35px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1.15rem;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .submit-btn {
+            background: linear-gradient(135deg, var(--cardiac-red), var(--primary));
+            color: white;
+            flex: 2;
+        }
+        
+        .submit-btn:hover {
+            background: linear-gradient(135deg, var(--primary), var(--dark));
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .reset-btn {
+            background: linear-gradient(135deg, #ffffff, #f7fafc);
+            color: var(--dark);
+            flex: 1;
+            border: 2px solid #cbd5e0;
+        }
+        
+        .reset-btn:hover {
+            background: white;
+            transform: translateY(-4px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+        
+        .results-section {
+            margin-top: 50px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.97);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+            display: none;
+            border: 1px solid rgba(0, 0, 0, 0.08);
+        }
+        
+        .score-display {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, var(--primary), var(--cardiac-red));
+            color: white;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+        }
+        
+        .score-value {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 15px 0;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 40px 0;
+            gap: 25px;
+        }
+        
+        .stat-box {
+            text-align: center;
+            padding: 30px 20px;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            flex: 1;
+            transition: transform 0.3s;
+        }
+        
+        .stat-box:hover {
+            transform: translateY(-5px);
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+        
+        .passed .stat-value {
+            color: var(--success);
+        }
+        
+        .failed .stat-value {
+            color: var(--danger);
+        }
+        
+        .attempted .stat-value {
+            color: var(--secondary);
+        }
+        
+        .answer-bank {
+            margin-top: 50px;
+        }
+        
+        .answer-item {
+            padding: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            background: white;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            box-shadow: 0 3px 6px rgba(0, 0, 0, 0.08);
+        }
+        
+        .answer-correct {
+            color: var(--success);
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px 10px;
+            background: #f0fff4;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .answer-incorrect {
+            color: var(--danger);
+            font-weight: bold;
+            display: inline-block;
+            padding: 5px 10px;
+            background: #fff5f5;
+            border-radius: 5px;
+            margin: 5px 0;
+        }
+        
+        .progress-bar {
+            height: 10px;
+            background: #e2e8f0;
+            border-radius: 5px;
+            margin: 25px 0;
+            overflow: hidden;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--cardiac-red), var(--primary));
+            transition: width 0.5s;
+        }
+        
+        @media (max-width: 1200px) {
+            .quiz-container {
+                flex-direction: column;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .score-value {
+                font-size: 3rem;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+            }
+            
+            button {
+                width: 100%;
+            }
+            
+            h1 {
+                font-size: 1.7rem;
+            }
+            
+            .score-value {
+                font-size: 2.5rem;
+            }
+            
+            .question-text {
+                font-size: 1.1rem;
+                padding: 15px;
+            }
+            
+            .option {
+                padding: 15px 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="heart-icon">❤️</div>
+            <h1>Anatomy Mastery: The Heart Quiz</h1>
+            <p class="subtitle">80 Comprehensive Questions Covering Chambers, Layers, Conduction System, Valves, and Coronary Circulation</p>
+            <div class="difficulty-badge">ADVANCED CARDIAC ANATOMY</div>
+        </header>
+        
+        <div class="quiz-info">
+            <div class="info-item">
+                <div class="info-value">80</div>
+                <div class="info-label">Questions</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value">4</div>
+                <div class="info-label">Chambers</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value">3</div>
+                <div class="info-label">Heart Layers</div>
+            </div>
+            <div class="info-item">
+                <div class="info-value">Full</div>
+                <div class="info-label">Conduction System</div>
+            </div>
+        </div>
+        
+        <div class="progress-bar">
+            <div class="progress" id="progress-bar" style="width: 0%"></div>
+        </div>
+        
+        <div class="quiz-container">
+            <div class="questions-section" id="questions-section">
+                <!-- Questions will be dynamically inserted here -->
+            </div>
+            
+            <div class="answer-section" id="answer-section">
+                <h2>Comprehensive Answer Bank</h2>
+                <p>Detailed explanations based on Gray's Anatomy and Netter's Clinical Anatomy</p>
+                <div id="answer-bank">
+                    <!-- Answers will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="reset-btn" id="reset-btn">Reset Quiz</button>
+            <button class="submit-btn" id="submit-btn">Submit Answers</button>
+        </div>
+        
+        <div class="results-section" id="results-section">
+            <div class="score-display">
+                <h2>Your Cardiac Anatomy Knowledge Score</h2>
+                <div class="score-value" id="score-value">0/80</div>
+                <p>Comprehensive Coverage of Heart Anatomy, Layers, and Conduction System</p>
+            </div>
+            
+            <div class="stats">
+                <div class="stat-box attempted">
+                    <div class="stat-value" id="attempted-value">0</div>
+                    <div class="stat-label">Questions Attempted</div>
+                </div>
+                <div class="stat-box passed">
+                    <div class="stat-value" id="passed-value">0</div>
+                    <div class="stat-label">Questions Passed</div>
+                </div>
+                <div class="stat-box failed">
+                    <div class="stat-value" id="failed-value">0</div>
+                    <div class="stat-label">Questions Failed</div>
+                </div>
+            </div>
+            
+            <div class="answer-bank">
+                <h3>Detailed Explanations</h3>
+                <div id="detailed-answers">
+                    <!-- Detailed answers will be dynamically inserted here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 80 Comprehensive questions on Heart Anatomy
+        const quizData = [
+            // Questions 1-20: Heart Chambers and Internal Structures
+            {
+                question: "The thickest wall of any heart chamber belongs to the:",
+                options: [
+                    "Left ventricle",
+                    "Right ventricle",
+                    "Left atrium",
+                    "Right atrium"
+                ],
+                correct: 0,
+                explanation: "The left ventricle has the thickest myocardium (10-15 mm) because it must generate enough pressure to pump blood through the systemic circulation."
+            },
+            {
+                question: "The moderator band (septomarginal trabecula) is found in the:",
+                options: [
+                    "Left ventricle",
+                    "Right ventricle",
+                    "Left atrium",
+                    "Right atrium"
+                ],
+                correct: 1,
+                explanation: "The moderator band is a muscular band in the right ventricle that carries the right bundle branch of the AV bundle from the septum to the anterior papillary muscle."
+            },
+            {
+                question: "The pectinate muscles are characteristically found in the:",
+                options: [
+                    "Ventricles only",
+                    "Atria only",
+                    "Both atria and ventricles",
+                    "Auricles only"
+                ],
+                correct: 1,
+                explanation: "Pectinate muscles are parallel muscular ridges found only in the atria, primarily in the auricles and right atrial wall."
+            },
+            {
+                question: "The crista terminalis separates:",
+                options: [
+                    "Right and left atria",
+                    "Right atrium from right ventricle",
+                    "Smooth from rough parts of right atrium",
+                    "Trabeculated from non-trabeculated left ventricle"
+                ],
+                correct: 2,
+                explanation: "The crista terminalis is a vertical muscular ridge in the right atrium that separates the smooth posterior part (sinus venarum) from the rough anterior part (pectinate muscles)."
+            },
+            {
+                question: "The fossa ovalis is located in the:",
+                options: [
+                    "Right ventricular septum",
+                    "Left atrial septum",
+                    "Interatrial septum of right atrium",
+                    "Aortic root"
+                ],
+                correct: 2,
+                explanation: "The fossa ovalis is an oval depression in the interatrial septum on the right atrial side, marking the site of the fetal foramen ovale."
+            },
+            {
+                question: "The trabeculae carneae are found in the:",
+                options: [
+                    "Atria",
+                    "Ventricles",
+                    "Both atria and ventricles",
+                    "Pericardial sac"
+                ],
+                correct: 1,
+                explanation: "Trabeculae carneae are irregular muscular ridges on the inner surfaces of both ventricles, but more prominent in the right ventricle."
+            },
+            {
+                question: "The aortic vestibule is part of the:",
+                options: [
+                    "Right ventricle outflow tract",
+                    "Left ventricle outflow tract",
+                    "Right atrium",
+                    "Aortic arch"
+                ],
+                correct: 1,
+                explanation: "The aortic vestibule is the smooth-walled outflow portion of the left ventricle leading to the aortic valve."
+            },
+            {
+                question: "The conus arteriosus (infundibulum) is part of the:",
+                options: [
+                    "Right ventricle outflow tract",
+                    "Left ventricle outflow tract",
+                    "Right atrium",
+                    "Left atrium"
+                ],
+                correct: 0,
+                explanation: "The conus arteriosus (infundibulum) is the funnel-shaped outflow portion of the right ventricle leading to the pulmonary valve."
+            },
+            {
+                question: "Which chamber forms most of the heart's anterior surface?",
+                options: [
+                    "Left atrium",
+                    "Left ventricle",
+                    "Right atrium",
+                    "Right ventricle"
+                ],
+                correct: 3,
+                explanation: "The right ventricle forms most of the anterior surface of the heart, with the right atrium forming the right border."
+            },
+            {
+                question: "The left atrial appendage is:",
+                options: [
+                    "Smooth-walled",
+                    "Larger than the right",
+                    "Finger-like with narrow opening",
+                    "Contains crista terminalis"
+                ],
+                correct: 2,
+                explanation: "The left atrial appendage is longer, narrower, and more hooked than the right, with a narrower opening into the left atrium."
+            },
+            {
+                question: "The coronary sinus opens into the:",
+                options: [
+                    "Left atrium",
+                    "Right atrium",
+                    "Left ventricle",
+                    "Right ventricle"
+                ],
+                correct: 1,
+                explanation: "The coronary sinus drains most cardiac veins and opens into the right atrium between the inferior vena cava and tricuspid valve."
+            },
+            {
+                question: "The sinus venarum is the smooth-walled part of the:",
+                options: [
+                    "Left atrium",
+                    "Right atrium",
+                    "Left ventricle",
+                    "Right ventricle"
+                ],
+                correct: 1,
+                explanation: "The sinus venarum is the smooth posterior part of the right atrium that receives the venae cavae and coronary sinus."
+            },
+            {
+                question: "Which chamber lies most posteriorly in the thorax?",
+                options: [
+                    "Right atrium",
+                    "Right ventricle",
+                    "Left atrium",
+                    "Left ventricle"
+                ],
+                correct: 2,
+                explanation: "The left atrium lies most posteriorly, forming the base of the heart and anterior to the esophagus."
+            },
+            {
+                question: "The atrioventricular groove (coronary sulcus) separates:",
+                options: [
+                    "Atria from ventricles",
+                    "Right from left atrium",
+                    "Right from left ventricle",
+                    "Apex from base"
+                ],
+                correct: 0,
+                explanation: "The coronary sulcus (AV groove) encircles the heart, separating the atria from the ventricles and containing the coronary arteries."
+            },
+            {
+                question: "The interventricular sulci contain:",
+                options: [
+                    "Coronary arteries only",
+                    "Cardiac veins only",
+                    "Both arteries and veins",
+                    "Conduction system fibers"
+                ],
+                correct: 2,
+                explanation: "The anterior and posterior interventricular sulci contain the interventricular arteries (LAD and PDA) and the great cardiac vein/middle cardiac vein."
+            },
+            {
+                question: "The apex of the heart is formed by the:",
+                options: [
+                    "Left atrium",
+                    "Right atrium",
+                    "Left ventricle",
+                    "Right ventricle"
+                ],
+                correct: 2,
+                explanation: "The apex is formed by the inferolateral part of the left ventricle, pointing downward, forward, and to the left."
+            },
+            {
+                question: "The base of the heart is formed mainly by the:",
+                options: [
+                    "Left atrium",
+                    "Right atrium",
+                    "Left ventricle",
+                    "Right ventricle"
+                ],
+                correct: 0,
+                explanation: "The base is formed mainly by the left atrium, with contributions from part of the right atrium, facing posteriorly toward T5-T8 vertebrae."
+            },
+            {
+                question: "Which structure marks the boundary between the inflow and outflow tracts of the right ventricle?",
+                options: [
+                    "Crista supraventricularis",
+                    "Moderator band",
+                    "Septomarginal trabecula",
+                    "Trabeculae carneae"
+                ],
+                correct: 0,
+                explanation: "The crista supraventricularis is a muscular ridge that separates the inflow (sinus) from outflow (conus) portions of the right ventricle."
+            },
+            {
+                question: "The atrial septal aneurysm usually involves the:",
+                options: [
+                    "Fossa ovalis region",
+                    "Coronary sinus region",
+                    "Tricuspid valve area",
+                    "Mitral valve area"
+                ],
+                correct: 0,
+                explanation: "Atrial septal aneurysms most commonly involve the fossa ovalis region of the interatrial septum, with excessive mobility."
+            },
+            {
+                question: "The Eustachian valve guards the:",
+                options: [
+                    "Coronary sinus orifice",
+                    "Inferior vena cava orifice",
+                    "Superior vena cava orifice",
+                    "Pulmonary veins"
+                ],
+                correct: 1,
+                explanation: "The Eustachian valve (valve of inferior vena cava) is a crescentic fold at the IVC opening into the right atrium, important in fetal circulation."
+            },
+
+            // Questions 21-40: Heart Layers and Pericardium
+            {
+                question: "The outermost layer of the heart wall is the:",
+                options: [
+                    "Endocardium",
+                    "Myocardium",
+                    "Epicardium",
+                    "Pericardium"
+                ],
+                correct: 2,
+                explanation: "The epicardium (visceral pericardium) is the outermost layer of the heart wall, consisting of mesothelium and connective tissue."
+            },
+            {
+                question: "The visceral layer of serous pericardium is also called the:",
+                options: [
+                    "Parietal pericardium",
+                    "Fibrous pericardium",
+                    "Epicardium",
+                    "Myocardium"
+                ],
+                correct: 2,
+                explanation: "The visceral layer of serous pericardium is the epicardium, which adheres to the heart surface and reflects onto the parietal pericardium."
+            },
+            {
+                question: "The pericardial cavity normally contains:",
+                options: [
+                    "No fluid",
+                    "15-50 mL of serous fluid",
+                    "100-200 mL of blood",
+                    "Lymph only"
+                ],
+                correct: 1,
+                explanation: "The pericardial cavity normally contains 15-50 mL of serous fluid that lubricates the pericardial surfaces, reducing friction."
+            },
+            {
+                question: "The transverse sinus lies posterior to:",
+                options: [
+                    "Ascending aorta and pulmonary trunk",
+                    "Superior vena cava",
+                    "Inferior vena cava",
+                    "Coronary sinus"
+                ],
+                correct: 0,
+                explanation: "The transverse sinus is a passage posterior to the ascending aorta and pulmonary trunk, anterior to the superior vena cava and atria."
+            },
+            {
+                question: "The oblique sinus is bounded anteriorly by the:",
+                options: [
+                    "Ascending aorta",
+                    "Pulmonary trunk",
+                    "Left atrium",
+                    "Right atrium"
+                ],
+                correct: 2,
+                explanation: "The oblique sinus is a cul-de-sac posterior to the left atrium, bounded anteriorly by the left atrium and posteriorly by the parietal pericardium."
+            },
+            {
+                question: "Which layer contains Purkinje fibers?",
+                options: [
+                    "Endocardium",
+                    "Myocardium",
+                    "Epicardium",
+                    "Pericardium"
+                ],
+                correct: 0,
+                explanation: "Purkinje fibers are specialized conduction fibers located in the subendocardial layer of the myocardium."
+            },
+            {
+                question: "The fibrous pericardium is continuous inferiorly with the:",
+                options: [
+                    "Diaphragm central tendon",
+                    "Pleura",
+                    "Mediastinal fascia",
+                    "Peritoneum"
+                ],
+                correct: 0,
+                explanation: "The fibrous pericardium blends with the central tendon of the diaphragm inferiorly, anchoring the heart."
+            },
+            {
+                question: "Pericardial tamponade occurs when fluid accumulation exceeds:",
+                options: [
+                    "50-100 mL rapidly",
+                    "100-200 mL rapidly",
+                    "200-300 mL slowly",
+                    "400-500 mL slowly"
+                ],
+                correct: 1,
+                explanation: "Rapid accumulation of 100-200 mL in the pericardial space can cause tamponade, while slow accumulation allows adaptation up to 1-2 L."
+            },
+            {
+                question: "The myocardium is thickest in the:",
+                options: [
+                    "Right atrium",
+                    "Right ventricle",
+                    "Left atrium",
+                    "Left ventricle"
+                ],
+                correct: 3,
+                explanation: "The left ventricular myocardium is 3-4 times thicker than the right ventricle due to higher systemic pressure requirements."
+            },
+            {
+                question: "Which statement about endocardium is FALSE?",
+                options: [
+                    "It lines the heart chambers",
+                    "It covers the valves",
+                    "It contains blood vessels",
+                    "It is continuous with vessel endothelium"
+                ],
+                correct: 2,
+                explanation: "The endocardium is avascular, receiving nutrients by diffusion from the blood in the chambers. It consists of endothelium and subendothelial connective tissue."
+            },
+            {
+                question: "The pericardium receives sensory innervation primarily from the:",
+                options: [
+                    "Vagus nerve",
+                    "Phrenic nerve",
+                    "Sympathetic trunk",
+                    "Intercostal nerves"
+                ],
+                correct: 1,
+                explanation: "The phrenic nerves (C3-C5) provide sensory innervation to the pericardium, explaining referred pain to the shoulder in pericarditis."
+            },
+            {
+                question: "The blood supply to the pericardium comes mainly from the:",
+                options: [
+                    "Coronary arteries",
+                    "Internal thoracic arteries",
+                    "Pericardiacophrenic arteries",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "Pericardial blood supply: internal thoracic arteries (pericardiacophrenic branches), coronary arteries (pericardial branches), and descending thoracic aorta."
+            },
+            {
+                question: "The serous pericardium secretes fluid from:",
+                options: [
+                    "Goblet cells",
+                    "Mesothelial cells",
+                    "Fibroblasts",
+                    "Macrophages"
+                ],
+                correct: 1,
+                explanation: "Mesothelial cells of the serous pericardium secrete the lubricating pericardial fluid, rich in phospholipids and hyaluronic acid."
+            },
+            {
+                question: "The strongest part of the fibrous pericardium is the:",
+                options: [
+                    "Sternopericardial ligament",
+                    "Phrenicopericardial ligament",
+                    "Vertebropericardial ligament",
+                    "All are equally strong"
+                ],
+                correct: 0,
+                explanation: "The sternopericardial ligament attaches the fibrous pericardium to the posterior sternum and is the strongest attachment."
+            },
+            {
+                question: "Pericardial sinuses develop from:",
+                options: [
+                    "Persistent fetal channels",
+                    "Embryonic pericardial reflections",
+                    "Failed fusion of heart tubes",
+                    "Differential growth of heart chambers"
+                ],
+                correct: 1,
+                explanation: "Pericardial sinuses develop from the reflections of serous pericardium around the great vessels during embryonic development."
+            },
+            {
+                question: "Which structure is NOT within the pericardial cavity?",
+                options: [
+                    "Ascending aorta",
+                    "Pulmonary trunk",
+                    "Superior vena cava",
+                    "Pulmonary veins"
+                ],
+                correct: 3,
+                explanation: "The pulmonary veins enter the left atrium outside the pericardial reflection, so they are not within the pericardial cavity proper."
+            },
+            {
+                question: "The myocardium of atria is separated from ventricles by:",
+                options: [
+                    "Fibrous skeleton",
+                    "Coronary sulcus",
+                    "Endocardial cushions",
+                    "Pericardial reflection"
+                ],
+                correct: 0,
+                explanation: "The fibrous cardiac skeleton electrically and mechanically insulates the atrial myocardium from the ventricular myocardium."
+            },
+            {
+                question: "The subepicardial layer contains:",
+                options: [
+                    "Purkinje fibers",
+                    "Coronary vessels and nerves",
+                    "Papillary muscles",
+                    "Trabeculae carneae"
+                ],
+                correct: 1,
+                explanation: "The subepicardial layer contains the coronary arteries, veins, nerves, and variable amounts of fat."
+            },
+            {
+                question: "Cardiac muscle fibers connect to each other via:",
+                options: [
+                    "Tight junctions",
+                    "Gap junctions",
+                    "Intercalated discs",
+                    "Both B and C"
+                ],
+                correct: 3,
+                explanation: "Cardiac muscle fibers connect via intercalated discs containing desmosomes (mechanical) and gap junctions (electrical)."
+            },
+            {
+                question: "The endocardium is thinnest in the:",
+                options: [
+                    "Atria",
+                    "Ventricles",
+                    "Valves",
+                    "Outflow tracts"
+                ],
+                correct: 0,
+                explanation: "The endocardium is thinner in the atria than in the ventricles, and thinnest in the atrial appendages."
+            },
+
+            // Questions 41-60: Conduction System
+            {
+                question: "The sinoatrial (SA) node is located at the junction of the:",
+                options: [
+                    "Right atrium and superior vena cava",
+                    "Right atrium and inferior vena cava",
+                    "Left atrium and pulmonary veins",
+                    "Right atrium and coronary sinus"
+                ],
+                correct: 0,
+                explanation: "The SA node is located in the wall of the right atrium at the junction with the superior vena cava, near the crista terminalis."
+            },
+            {
+                question: "The blood supply to the SA node typically comes from the:",
+                options: [
+                    "Right coronary artery (60%)",
+                    "Left coronary artery (40%)",
+                    "Both equally",
+                    "Coronary sinus"
+                ],
+                correct: 0,
+                explanation: "The SA nodal artery arises from the right coronary artery in 60% of people and from the left circumflex in 40%."
+            },
+            {
+                question: "The atrioventricular (AV) node is located in the:",
+                options: [
+                    "Interatrial septum near coronary sinus",
+                    "Interventricular septum",
+                    "Crista terminalis",
+                    "Moderator band"
+                ],
+                correct: 0,
+                explanation: "The AV node lies in the interatrial septum near the opening of the coronary sinus, just above the tricuspid valve annulus."
+            },
+            {
+                question: "The AV node receives its blood supply primarily from the:",
+                options: [
+                    "Right coronary artery (90%)",
+                    "Left anterior descending",
+                    "Left circumflex",
+                    "Posterior descending"
+                ],
+                correct: 0,
+                explanation: "The AV nodal artery arises from the right coronary artery in 90% of people and from the left circumflex in 10%."
+            },
+            {
+                question: "The bundle of His penetrates the:",
+                options: [
+                    "Atrial septum",
+                    "Fibrous trigone",
+                    "Right fibrous trigone",
+                    "Membranous septum"
+                ],
+                correct: 2,
+                explanation: "The bundle of His penetrates the right fibrous trigone of the cardiac skeleton to reach the interventricular septum."
+            },
+            {
+                question: "The right bundle branch runs in the:",
+                options: [
+                    "Moderator band",
+                    "Trabeculae carneae",
+                    "Septomarginal trabecula",
+                    "Papillary muscle"
+                ],
+                correct: 2,
+                explanation: "The right bundle branch runs subendocardially down the right side of the interventricular septum in the septomarginal trabecula."
+            },
+            {
+                question: "The left bundle branch divides into:",
+                options: [
+                    "Two fascicles",
+                    "Three fascicles",
+                    "Four fascicles",
+                    "Multiple Purkinje fibers directly"
+                ],
+                correct: 1,
+                explanation: "The left bundle branch typically divides into anterior, posterior, and septal fascicles, though the septal may be variable."
+            },
+            {
+                question: "Bachmann's bundle conducts impulses from:",
+                options: [
+                    "SA node to AV node",
+                    "Right atrium to left atrium",
+                    "AV node to bundle of His",
+                    "Bundle branches to Purkinje fibers"
+                ],
+                correct: 1,
+                explanation: "Bachmann's bundle is the principal interatrial conduction pathway, conducting impulses from the right to left atrium."
+            },
+            {
+                question: "Purkinje fibers are found in the:",
+                options: [
+                    "Subendocardial layer",
+                    "Myocardial middle layer",
+                    "Subepicardial layer",
+                    "Endocardium only"
+                ],
+                correct: 0,
+                explanation: "Purkinje fibers form a subendocardial network in both ventricles, conducting impulses rapidly to ventricular myocardium."
+            },
+            {
+                question: "The normal conduction velocity is fastest in the:",
+                options: [
+                    "SA node",
+                    "AV node",
+                    "Purkinje fibers",
+                    "Ventricular myocardium"
+                ],
+                correct: 2,
+                explanation: "Conduction velocity: Purkinje fibers (2-4 m/s) > atrial/ventricular muscle (0.3-0.5 m/s) > AV node (0.05 m/s)."
+            },
+            {
+                question: "The AV nodal delay is important for:",
+                options: [
+                    "Preventing retrograde conduction",
+                    "Allowing atrial emptying",
+                    "Both A and B",
+                    "Ventricular filling only"
+                ],
+                correct: 2,
+                explanation: "The AV nodal delay (0.1s) allows time for atrial contraction to complete ventricular filling and prevents retrograde conduction."
+            },
+            {
+                question: "Accessory pathways (Kent bundles) bypass the:",
+                options: [
+                    "SA node",
+                    "AV node",
+                    "Bundle of His",
+                    "Bundle branches"
+                ],
+                correct: 1,
+                explanation: "Kent bundles are accessory AV connections that bypass the AV node, causing pre-excitation syndromes like WPW."
+            },
+            {
+                question: "The triangle of Koch contains the:",
+                options: [
+                    "SA node",
+                    "AV node",
+                    "Bundle of His",
+                    "Coronary sinus"
+                ],
+                correct: 1,
+                explanation: "The triangle of Koch (bordered by Todaro tendon, coronary sinus, tricuspid annulus) contains the AV node and penetrating bundle."
+            },
+            {
+                question: "The slow pathway of AV nodal conduction is located:",
+                options: [
+                    "Superiorly near compact AV node",
+                    "Inferiorly near coronary sinus",
+                    "In the bundle of His",
+                    "In the crista terminalis"
+                ],
+                correct: 1,
+                explanation: "The slow pathway is located inferiorly near the coronary sinus os, while the fast pathway is superior near the compact AV node."
+            },
+            {
+                question: "Mahaim fibers connect the:",
+                options: [
+                    "Atrium to ventricle",
+                    "AV node to ventricle",
+                    "Bundle of His to ventricle",
+                    "Right to left bundle"
+                ],
+                correct: 2,
+                explanation: "Mahaim fibers are nodofascicular or fasciculoventricular connections that bypass part of the normal conduction system."
+            },
+            {
+                question: "The normal PR interval represents conduction through:",
+                options: [
+                    "SA node to atrial muscle",
+                    "Atrial muscle to AV node",
+                    "AV node to Purkinje fibers",
+                    "SA node through AV node to His bundle"
+                ],
+                correct: 3,
+                explanation: "The PR interval (0.12-0.20s) represents conduction from SA node through atria, AV node, and bundle of His to ventricles."
+            },
+            {
+                question: "The most common site for heart block is the:",
+                options: [
+                    "SA node",
+                    "AV node",
+                    "Bundle of His",
+                    "Right bundle branch"
+                ],
+                correct: 1,
+                explanation: "The AV node is the most common site for conduction block due to its inherent slow conduction and vulnerability to ischemia."
+            },
+            {
+                question: "The internodal pathways include all EXCEPT:",
+                options: [
+                    "Anterior (Bachmann's)",
+                    "Middle (Wenckebach's)",
+                    "Posterior (Thorel's)",
+                    "Lateral (James')"
+                ],
+                correct: 3,
+                correct: 3,
+                explanation: "James fibers are accessory pathways, not normal internodal pathways. The three internodal tracts are anterior, middle, and posterior."
+            },
+            {
+                question: "Purkinje fibers have abundant:",
+                options: [
+                    "Myoglobin",
+                    "Glycogen",
+                    "Gap junctions",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "Purkinje fibers have abundant glycogen (energy), gap junctions (fast conduction), and are larger than normal cardiomyocytes with sparse myofibrils."
+            },
+            {
+                question: "The conduction system develops from:",
+                options: [
+                    "Neural crest cells",
+                    "Cardiac mesoderm",
+                    "Endocardial cushions",
+                    "All of the above"
+                ],
+                correct: 1,
+                explanation: "The conduction system develops from specialized cardiac mesoderm, not neural crest cells which contribute to other cardiac structures."
+            },
+
+            // Questions 61-80: Coronary Circulation and Valves
+            {
+                question: "The left coronary artery arises from the:",
+                options: [
+                    "Right coronary sinus",
+                    "Left coronary sinus",
+                    "Non-coronary sinus",
+                    "Right and left sinuses"
+                ],
+                correct: 1,
+                explanation: "The left coronary artery arises from the left coronary sinus of the aortic root, just above the left aortic cusp."
+            },
+            {
+                question: "The left anterior descending artery supplies:",
+                options: [
+                    "Anterior 2/3 of interventricular septum",
+                    "Anterior left ventricle",
+                    "Right ventricle apex",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "The LAD supplies anterior left ventricle, anterior 2/3 of interventricular septum, apex, and part of right ventricle."
+            },
+            {
+                question: "The posterior descending artery typically arises from the:",
+                options: [
+                    "Right coronary artery (70%)",
+                    "Left circumflex (30%)",
+                    "Both equally",
+                    "Left anterior descending"
+                ],
+                correct: 0,
+                explanation: "In 70% of people (right dominance), the PDA arises from the RCA. In 30% (left dominance), it arises from the left circumflex."
+            },
+            {
+                question: "The artery to the SA node usually arises from the:",
+                options: [
+                    "Right coronary artery (55%)",
+                    "Left circumflex (45%)",
+                    "Left anterior descending",
+                    "Posterior descending"
+                ],
+                correct: 0,
+                explanation: "The SA nodal artery arises from the RCA in 55-60% and from the left circumflex in 40-45% of people."
+            },
+            {
+                question: "The great cardiac vein runs with the:",
+                options: [
+                    "Right coronary artery",
+                    "Left anterior descending artery",
+                    "Left circumflex artery",
+                    "Posterior descending artery"
+                ],
+                correct: 1,
+                explanation: "The great cardiac vein accompanies the LAD in the anterior interventricular sulcus, then curves with the left circumflex."
+            },
+            {
+                question: "The coronary sinus drains into the:",
+                options: [
+                    "Left atrium",
+                    "Right atrium",
+                    "Left ventricle",
+                    "Right ventricle"
+                ],
+                correct: 1,
+                explanation: "The coronary sinus (largest cardiac vein) drains most cardiac venous blood into the right atrium between IVC and tricuspid valve."
+            },
+            {
+                question: "Thebesian veins drain directly into:",
+                options: [
+                    "Coronary sinus",
+                    "Cardiac chambers",
+                    "Pericardial cavity",
+                    "Pulmonary veins"
+                ],
+                correct: 1,
+                explanation: "Thebesian veins are small veins that drain myocardial blood directly into the cardiac chambers, bypassing the coronary sinus."
+            },
+            {
+                question: "The mitral valve has how many leaflets?",
+                options: [
+                    "Two",
+                    "Three",
+                    "Four",
+                    "Variable number"
+                ],
+                correct: 0,
+                explanation: "The mitral (bicuspid) valve has two leaflets: anterior (aortic) and posterior (mural), attached to two papillary muscles."
+            },
+            {
+                question: "The aortic valve cusps are named:",
+                options: [
+                    "Anterior, posterior, septal",
+                    "Right coronary, left coronary, non-coronary",
+                    "Superior, inferior, lateral",
+                    "Medial, lateral, posterior"
+                ],
+                correct: 1,
+                explanation: "Aortic valve cusps are named for the coronary arteries arising above them: right coronary, left coronary, and non-coronary cusps."
+            },
+            {
+                question: "The tricuspid valve is attached to papillary muscles from the:",
+                options: [
+                    "Right ventricular free wall",
+                    "Interventricular septum",
+                    "Both A and B",
+                    "Left ventricular wall"
+                ],
+                correct: 2,
+                explanation: "The tricuspid valve has three papillary muscles: anterior (largest, from free wall), posterior (from free wall), and septal (from septum)."
+            },
+            {
+                question: "The pulmonary valve is most anterior, at the level of:",
+                options: [
+                    "Left 3rd costal cartilage",
+                    "Right 2nd costal cartilage",
+                    "Left 2nd intercostal space",
+                    "Right 3rd intercostal space"
+                ],
+                correct: 0,
+                explanation: "The pulmonary valve lies most anteriorly, behind the left 3rd costal cartilage, at the level of the 3rd thoracic vertebra."
+            },
+            {
+                question: "The mitral annulus is:",
+                options: [
+                    "Circular",
+                    "D-shaped",
+                    "Triangular",
+                    "Square"
+                ],
+                correct: 1,
+                explanation: "The mitral annulus is D-shaped, with the straight portion formed by attachment to the aortic valve (aorto-mitral curtain)."
+            },
+            {
+                question: "The right coronary artery supplies the:",
+                options: [
+                    "SA node (usually)",
+                    "AV node (usually)",
+                    "Right ventricle",
+                    "All of the above"
+                ],
+                correct: 3,
+                explanation: "The RCA typically supplies the right atrium, right ventricle, SA node (60%), AV node (90%), and posterior interventricular septum."
+            },
+            {
+                question: "The left main coronary artery divides into:",
+                options: [
+                    "LAD and left circumflex",
+                    "LAD and posterior descending",
+                    "Circumflex and obtuse marginal",
+                    "Diagonal and septal branches"
+                ],
+                correct: 0,
+                explanation: "The left main coronary artery (3-6 mm diameter, 10-15 mm length) divides into the left anterior descending and left circumflex arteries."
+            },
+            {
+                question: "The marginal branch of the RCA supplies the:",
+                options: [
+                    "Left ventricle",
+                    "Right ventricle",
+                    "Interventricular septum",
+                    "Left atrium"
+                ],
+                correct: 1,
+                explanation: "The acute marginal branch of the RCA runs along the acute margin of the heart, supplying the right ventricular free wall."
+            },
+            {
+                question: "The obtuse marginal branches arise from the:",
+                options: [
+                    "Right coronary artery",
+                    "Left circumflex artery",
+                    "Left anterior descending",
+                    "Posterior descending"
+                ],
+                correct: 1,
+                explanation: "Obtuse marginal branches arise from the left circumflex artery and supply the lateral wall of the left ventricle."
+            },
+            {
+                question: "The conus artery often anastomoses with the:",
+                options: [
+                    "Left anterior descending",
+                    "Right coronary artery",
+                    "Circumflex artery",
+                    "Pulmonary artery"
+                ],
+                correct: 0,
+                explanation: "The conus artery (first branch of RCA) often anastomoses with the left anterior descending, forming the circle of Vieussens."
+            },
+            {
+                question: "Kugel's artery anastomoses between:",
+                options: [
+                    "RCA and LAD",
+                    "Circumflex and RCA",
+                    "Right and left atria",
+                    "Coronary and bronchial arteries"
+                ],
+                correct: 1,
+                explanation: "Kugel's artery (arteria anastomotica auricularis magna) connects the circumflex and RCA in the interatrial septum."
+            },
+            {
+                question: "The middle cardiac vein runs with the:",
+                options: [
+                    "LAD",
+                    "PDA",
+                    "Circumflex",
+                    "Right marginal artery"
+                ],
+                correct: 1,
+                explanation: "The middle cardiac vein accompanies the posterior descending artery in the posterior interventricular sulcus."
+            },
+            {
+                question: "The smallest cardiac veins (Thebesian) are most numerous in the:",
+                options: [
+                    "Right atrium",
+                    "Right ventricle",
+                    "Left atrium",
+                    "Left ventricle"
+                ],
+                correct: 1,
+                explanation: "Thebesian veins are most numerous in the right ventricle, followed by the right atrium, with fewer in the left heart chambers."
+            }
+        ];
+
+        // Function to shuffle array (Fisher-Yates algorithm)
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        // Initialize the quiz
+        document.addEventListener('DOMContentLoaded', function() {
+            const questionsSection = document.getElementById('questions-section');
+            const answerSection = document.getElementById('answer-section');
+            const answerBank = document.getElementById('answer-bank');
+            const submitBtn = document.getElementById('submit-btn');
+            const resetBtn = document.getElementById('reset-btn');
+            const resultsSection = document.getElementById('results-section');
+            const scoreValue = document.getElementById('score-value');
+            const attemptedValue = document.getElementById('attempted-value');
+            const passedValue = document.getElementById('passed-value');
+            const failedValue = document.getElementById('failed-value');
+            const detailedAnswers = document.getElementById('detailed-answers');
+            const progressBar = document.getElementById('progress-bar');
+            
+            let userAnswers = Array(quizData.length).fill(null);
+            
+            // Create question elements with shuffled answer options
+            quizData.forEach((questionData, index) => {
+                const questionElement = document.createElement('div');
+                questionElement.className = 'question';
+                
+                // Shuffle the options but remember correct answer position
+                const optionsWithIndices = questionData.options.map((option, i) => ({ option, originalIndex: i }));
+                const shuffledOptions = shuffleArray([...optionsWithIndices]);
+                const correctAnswerNewIndex = shuffledOptions.findIndex(item => item.originalIndex === questionData.correct);
+                
+                // Store the new correct index in the question data
+                questionData.shuffledCorrect = correctAnswerNewIndex;
+                
+                // Add category-specific notes
+                let categoryNote = '';
+                if (index < 20) { // Chambers and internal structures
+                    categoryNote = `<div class="chambers-note">Heart Chambers: This question covers atrial and ventricular anatomy, internal structures, and spatial relationships.</div>`;
+                } else if (index < 40) { // Layers and pericardium
+                    categoryNote = `<div class="layers-note">Heart Layers & Pericardium: This question covers endocardium, myocardium, epicardium, and pericardial anatomy.</div>`;
+                } else if (index < 60) { // Conduction system
+                    categoryNote = `<div class="conduction-note">Conduction System: This question covers SA node, AV node, bundle of His, bundle branches, and Purkinje fibers.</div>`;
+                } else { // Coronary circulation and valves
+                    categoryNote = `<div class="vessels-note">Coronary Circulation & Valves: This question covers coronary arteries, cardiac veins, and heart valve anatomy.</div>`;
+                }
+                
+                questionElement.innerHTML = `
+                    <div class="question-number">${index + 1}</div>
+                    <div class="question-text">${questionData.question}</div>
+                    ${categoryNote}
+                    <div class="options">
+                        ${shuffledOptions.map((item, optionIndex) => `
+                            <div class="option" data-question="${index}" data-option="${optionIndex}" data-original="${item.originalIndex}" data-letter="${String.fromCharCode(65 + optionIndex)}">
+                                <div class="option-content">${item.option}</div>
+                            </div>
+                        `).join('')}
+                    </div>
+                `;
+                questionsSection.appendChild(questionElement);
+                
+                // Create answer element for answer bank
+                const answerElement = document.createElement('div');
+                answerElement.className = 'answer-item';
+                answerElement.innerHTML = `
+                    <strong>${index + 1}. ${questionData.question}</strong><br>
+                    <span class="answer-correct">Correct: ${String.fromCharCode(65 + questionData.correct)}. ${questionData.options[questionData.correct]}</span>
+                `;
+                answerBank.appendChild(answerElement);
+            });
+            
+            // Update progress bar
+            function updateProgress() {
+                const answered = userAnswers.filter(answer => answer !== null).length;
+                const progress = (answered / quizData.length) * 100;
+                progressBar.style.width = `${progress}%`;
+            }
+            
+            // Add event listeners to options
+            document.querySelectorAll('.option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const questionIndex = parseInt(this.getAttribute('data-question'));
+                    const optionIndex = parseInt(this.getAttribute('data-option'));
+                    
+                    // Remove selected class from all options in this question
+                    const questionOptions = document.querySelectorAll(`.option[data-question="${questionIndex}"]`);
+                    questionOptions.forEach(opt => opt.classList.remove('selected'));
+                    
+                    // Add selected class to clicked option
+                    this.classList.add('selected');
+                    
+                    // Store user's answer
+                    userAnswers[questionIndex] = optionIndex;
+                    
+                    // Update progress
+                    updateProgress();
+                });
+            });
+            
+            // Submit button event listener
+            submitBtn.addEventListener('click', function() {
+                let score = 0;
+                let attempted = 0;
+                let passed = 0;
+                let failed = 0;
+                
+                // Clear previous detailed answers
+                detailedAnswers.innerHTML = '';
+                
+                // Evaluate answers
+                quizData.forEach((questionData, index) => {
+                    const userAnswer = userAnswers[index];
+                    const correctAnswer = questionData.shuffledCorrect;
+                    const questionOptions = document.querySelectorAll(`.option[data-question="${index}"]`);
+                    
+                    if (userAnswer !== null) {
+                        attempted++;
+                        
+                        // Mark correct/incorrect answers
+                        questionOptions.forEach((option, optionIndex) => {
+                            if (optionIndex === correctAnswer) {
+                                option.classList.add('correct');
+                            } else if (optionIndex === userAnswer && userAnswer !== correctAnswer) {
+                                option.classList.add('incorrect');
+                            }
+                        });
+                        
+                        if (userAnswer === correctAnswer) {
+                            score++;
+                            passed++;
+                        } else {
+                            failed++;
+                        }
+                        
+                        // Get the original letter for the user's answer
+                        const userOptionElement = document.querySelector(`.option[data-question="${index}"][data-option="${userAnswer}"]`);
+                        const userOriginalIndex = userOptionElement ? parseInt(userOptionElement.getAttribute('data-original')) : null;
+                        const userAnswerLetter = userOriginalIndex !== null ? String.fromCharCode(65 + userOriginalIndex) : '?';
+                        const userAnswerText = userOptionElement ? userOptionElement.querySelector('.option-content').textContent : 'Not selected';
+                        
+                        // Create detailed answer element
+                        const detailedAnswer = document.createElement('div');
+                        detailedAnswer.className = 'answer-item';
+                        const userAnswerClass = userAnswer === correctAnswer ? 'answer-correct' : 'answer-incorrect';
+                        detailedAnswer.innerHTML = `
+                            <strong>${index + 1}. ${questionData.question}</strong><br>
+                            <span class="${userAnswerClass}">Your answer: ${userAnswerLetter}. ${userAnswerText}</span><br>
+                            <span class="answer-correct">Correct: ${String.fromCharCode(65 + questionData.correct)}. ${questionData.options[questionData.correct]}</span><br>
+                            <div class="valves-note">${questionData.explanation}</div>
+                        `;
+                        detailedAnswers.appendChild(detailedAnswer);
+                    } else {
+                        // Create detailed answer for unattempted question
+                        const detailedAnswer = document.createElement('div');
+                        detailedAnswer.className = 'answer-item';
+                        detailedAnswer.innerHTML = `
+                            <strong>${index + 1}. ${questionData.question}</strong><br>
+                            <span class="answer-incorrect">Your answer: Not attempted</span><br>
+                            <span class="answer-correct">Correct: ${String.fromCharCode(65 + questionData.correct)}. ${questionData.options[questionData.correct]}</span><br>
+                            <div class="valves-note">${questionData.explanation}</div>
+                        `;
+                        detailedAnswers.appendChild(detailedAnswer);
+                    }
+                });
+                
+                // Update score and stats
+                scoreValue.textContent = `${score}/${quizData.length}`;
+                attemptedValue.textContent = attempted;
+                passedValue.textContent = passed;
+                failedValue.textContent = failed;
+                
+                // Show results section and answer section
+                resultsSection.style.display = 'block';
+                answerSection.classList.add('visible');
+                
+                // Scroll to results
+                resultsSection.scrollIntoView({ behavior: 'smooth' });
+            });
+            
+            // Reset button event listener
+            resetBtn.addEventListener('click', function() {
+                userAnswers = Array(quizData.length).fill(null);
+                
+                // Clear all selections
+                document.querySelectorAll('.option').forEach(option => {
+                    option.classList.remove('selected', 'correct', 'incorrect');
+                });
+                
+                // Hide results section and answer section
+                resultsSection.style.display = 'none';
+                answerSection.classList.remove('visible');
+                
+                // Reset progress bar
+                progressBar.style.width = '0%';
+                
+                // Scroll to top
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        });
+    </script>
+</body>
+</html>
